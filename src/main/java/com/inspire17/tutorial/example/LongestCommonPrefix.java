@@ -26,6 +26,20 @@ public class LongestCommonPrefix {
         return stringBuffer.toString();
     }
 
+    public String longestCommonPrefix2(List<String> strings) {
+        String s = new String();
+        String refString = strings.get(0);
+        int pos = 0;
+        int maxPos = findMinLen(strings);
+        int i = 0;
+        while (pos < maxPos && refString.charAt(pos) == strings.get(i).charAt(pos)) {
+            s = refString.substring(0, pos+1);
+            pos++;
+            i++;
+        }
+        return s;
+    }
+
     private int findMinLen(List<String> strings) {
         int len = Integer.MAX_VALUE;
         for (String s : strings) {
@@ -39,8 +53,11 @@ public class LongestCommonPrefix {
     public static void main(String[] args) {
         LongestCommonPrefix longestCommonPrefix = new LongestCommonPrefix();
         List<String> strings = Arrays.asList("Mr Code", "Mr Cody", "Mr Coder");
-        List<String> strings1 = Arrays.asList("geeksforgeeks", "geeks", "geek", "geekzer");
+        List<String> strings1 = Arrays.asList("geeksforgeeks", "geeks", "geek", "geezer");
+        List<String> strings2 = Arrays.asList("", "", "", "");
         System.out.println(longestCommonPrefix.longestCommonPrefix(strings));
-        System.out.println(longestCommonPrefix.longestCommonPrefix(strings1));
+        System.out.println(longestCommonPrefix.longestCommonPrefix(strings2));
+        System.out.println(longestCommonPrefix.longestCommonPrefix2(strings1));
+        System.out.println(longestCommonPrefix.longestCommonPrefix2(strings2));
     }
 }
