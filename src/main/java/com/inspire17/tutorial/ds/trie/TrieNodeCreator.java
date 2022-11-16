@@ -112,19 +112,10 @@ public class TrieNodeCreator {
     private void delete(String word, boolean deleteAllWordsWithPrefix) {
         TrieNode currentNode = root;
         if (!deleteAllWordsWithPrefix) {
-            for (char c : word.toCharArray()) {
-                final TrieNode node = currentNode.getChildren().get(c);
-                if (node == null) {
-                    System.out.println("No such word found to delete");
-                    return;
-                }
-                currentNode = node;
-            }
-            if (currentNode.isEndOfWord()) {
-                currentNode.setEndOfWord(false);
-            }
-        } else {
             delete(currentNode, word, 0);
+        } else {
+//            TODO to implement
+//            deletePrefix(currentNode, word, 0);
         }
     }
 
