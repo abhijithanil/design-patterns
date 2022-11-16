@@ -16,6 +16,20 @@ public class TrieNodeCreator {
         root = new TrieNode();
     }
 
+    private void processWord(List<String> words) {
+        final List<String> firstHalf = words.subList(0, (words.size() / 2));
+        final List<String> secondHalf = words.subList((words.size() / 2) + 1, words.size() - 1);
+
+        for (String w : firstHalf
+        ) {
+            insert(w.toCharArray());
+        }
+        for (String w : secondHalf
+        ) {
+            recursiveInsert(w.toCharArray(), 0, root);
+        }
+    }
+
     public void insert(char[] arr) {
         TrieNode currentNode = root;
         for (char c : arr) {
@@ -95,25 +109,55 @@ public class TrieNodeCreator {
         });
     }
 
+    private void delete(String word, boolean deleteAllWordsWithPrefix) {
+        TrieNode currentNode = root;
+        if (!deleteAllWordsWithPrefix) {
+            for (char c : word.toCharArray()) {
+                final TrieNode node = currentNode.getChildren().get(c);
+                if (node == null) {
+                    System.out.println("No such word found to delete");
+                    return;
+                }
+                currentNode = node;
+            }
+            if (currentNode.isEndOfWord()) {
+                currentNode.setEndOfWord(false);
+            }
+        } else {
+            delete(currentNode, word, 0);
+        }
+    }
+
+    private boolean delete(TrieNode current, String word, int index) {
+        if (index == word.length()) {
+            if (!current.isEndOfWord()) {
+                return false;
+            }
+            current.setEndOfWord(false);
+            return current.getChildren().size() == 0;
+        }
+        char ch = word.charAt(index);
+        TrieNode node = current.getChildren().get(ch);
+        if (node == null) {
+            return false;
+        }
+        boolean shouldDeleteCurrentNode = delete(node, word, index + 1);
+        if (shouldDeleteCurrentNode) {
+            current.getChildren().remove(ch);
+            return current.getChildren().size() == 0;
+        }
+        return false;
+    }
+
     public static void main(String[] args) throws IOException {
         TrieNodeCreator trieNodeCreator = new TrieNodeCreator();
         final List<String> words = FileReader.readFile("words.txt");
-        final List<String> firstHalf = words.subList(0, (words.size() / 2));
-        final List<String> secondHalf = words.subList((words.size() / 2) + 1, words.size() - 1);
-
-        for (String w : firstHalf
-        ) {
-            trieNodeCreator.insert(w.toCharArray());
-        }
-        for (String w : secondHalf
-        ) {
-            trieNodeCreator.recursiveInsert(w.toCharArray(), 0, trieNodeCreator.root);
-        }
+        trieNodeCreator.processWord(words);
 
         System.out.println("Processing word completed");
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("1: Prefix Search \t 2: Word search \t 3: Exit");
+            System.out.println("1: Prefix Search \t 2: Word search \n3: Delete Prefix \t 4: Delete Word \n5: Recreate DS \t \t 6: Exit");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
@@ -136,6 +180,22 @@ public class TrieNodeCreator {
                     }
                     break;
                 case 3:
+                    System.out.println("Enter prefix");
+                    String d1 = scanner.next();
+                    trieNodeCreator.delete(d1, true);
+                    System.out.println("Deletion completed");
+                    break;
+                case 4:
+                    System.out.println("Enter word");
+                    String d2 = scanner.next();
+                    trieNodeCreator.delete(d2, false);
+                    System.out.println("Deletion completed");
+                    break;
+                case 5:
+                    trieNodeCreator.processWord(words);
+                    System.out.println("Tier data structure recreated..");
+                    break;
+                case 6:
                     System.out.println("Thanks for using Trie searcher..");
                     System.exit(0);
                 default:
