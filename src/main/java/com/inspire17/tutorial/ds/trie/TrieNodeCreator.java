@@ -44,55 +44,6 @@ public class TrieNodeCreator {
         recursiveInsert(arr, index, node);
     }
 
-    public static void main(String[] args) throws IOException {
-        TrieNodeCreator trieNodeCreator = new TrieNodeCreator();
-        final List<String> words = FileReader.readFile("words.txt");
-        final List<String> firstHalf = words.subList(0, (words.size() / 2));
-        final List<String> secondHalf = words.subList((words.size() / 2) + 1, words.size() - 1);
-
-        for (String w : firstHalf
-        ) {
-            trieNodeCreator.insert(w.toCharArray());
-        }
-        for (String w : secondHalf
-        ) {
-            trieNodeCreator.recursiveInsert(w.toCharArray(), 0, trieNodeCreator.root);
-        }
-
-        System.out.println("Processing word completed");
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("1: Prefix Search \t 2: Word search \t 3: Exit");
-            int choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    System.out.println("Enter prefix");
-                    String inputString = scanner.next();
-                    List<String> possibleWords = trieNodeCreator.searchThis(inputString.toCharArray());
-                    for (String s : possibleWords) {
-                        System.out.println(s);
-                    }
-                    System.out.println("Total suggest words found - " + possibleWords.size());
-                    break;
-                case 2:
-                    System.out.println("Enter word");
-                    String word = scanner.next();
-                    Boolean wordExist = trieNodeCreator.searchThis(word);
-                    if (wordExist) {
-                        System.out.println("Searched word exits");
-                    } else {
-                        System.out.println("Searched word not found");
-                    }
-                    break;
-                case 3:
-                    System.out.println("Thanks for using Trie searcher..");
-                    System.exit(0);
-                default:
-                    break;
-            }
-        }
-    }
-
     private List<String> searchThis(char[] input) {
         return this.search(input, true);
     }
@@ -144,4 +95,52 @@ public class TrieNodeCreator {
         });
     }
 
+    public static void main(String[] args) throws IOException {
+        TrieNodeCreator trieNodeCreator = new TrieNodeCreator();
+        final List<String> words = FileReader.readFile("words.txt");
+        final List<String> firstHalf = words.subList(0, (words.size() / 2));
+        final List<String> secondHalf = words.subList((words.size() / 2) + 1, words.size() - 1);
+
+        for (String w : firstHalf
+        ) {
+            trieNodeCreator.insert(w.toCharArray());
+        }
+        for (String w : secondHalf
+        ) {
+            trieNodeCreator.recursiveInsert(w.toCharArray(), 0, trieNodeCreator.root);
+        }
+
+        System.out.println("Processing word completed");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("1: Prefix Search \t 2: Word search \t 3: Exit");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter prefix");
+                    String inputString = scanner.next();
+                    List<String> possibleWords = trieNodeCreator.searchThis(inputString.toCharArray());
+                    for (String s : possibleWords) {
+                        System.out.println(s);
+                    }
+                    System.out.println("Total suggest words found - " + possibleWords.size());
+                    break;
+                case 2:
+                    System.out.println("Enter word");
+                    String word = scanner.next();
+                    Boolean wordExist = trieNodeCreator.searchThis(word);
+                    if (wordExist) {
+                        System.out.println("Searched word exits");
+                    } else {
+                        System.out.println("Searched word not found");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Thanks for using Trie searcher..");
+                    System.exit(0);
+                default:
+                    break;
+            }
+        }
+    }
 }
